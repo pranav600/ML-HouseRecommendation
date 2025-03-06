@@ -1,0 +1,39 @@
+@import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
+
+.header {
+    background-color: #1E3A8A;
+    color: white;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+}
+
+.header img {
+    height: 50px;
+    border-radius: 50%;
+}
+
+.header h1 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+}
+
+.profile span {
+    margin-left: 10px;
+    font-size: 18px;
+}
+
+.property-card {
+    border: 2px solid #4CAF50;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
