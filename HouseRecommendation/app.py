@@ -1,10 +1,33 @@
 import streamlit as st
 import pandas as pd
 
-# Load the dataset
+#  Set Page Configuration (Must be the first Streamlit command)
+st.set_page_config(page_title="Property Recommendation", layout="wide")
+
+#  Load External CSS
+def load_css(file_path):
+    with open(file_path, "r") as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+# Load the CSS file
+load_css("styles.css")
+
+#  Create a Professional Header
+st.markdown("""
+    <div class="navbar">
+        <div>🏠 <b>Property Recommendation</b></div>
+        <div class="nav-right">
+            <a href="/">Home</a>
+            <a href="/about">About Us</a>
+            <a href="/login">Login</a>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
+
+#  Load the Dataset
 data = pd.read_csv("Makaan_Properties_No_Duplicates.csv")
 
-# Function to clean and preprocess the dataset
+#  Clean Data Functions
 def clean_size(size_str):
     return int(str(size_str).replace(",", "").replace(" sq ft", "").strip())
 
@@ -26,31 +49,27 @@ def format_price(price):
         return f"\u20B9{price / 10**5:.2f} Lakh"
     return f"\u20B9{price:,.0f}"
 
-# Apply cleaning functions
+#  Apply Cleaning Functions
 data["Size"] = data["Size"].apply(clean_size)
 data["No_of_BHK"] = data["No_of_BHK"].apply(clean_bhk)
 data["Price"] = data["Price"].apply(clean_price)
 
-# Calculate price per square foot
+#  Calculate Price per Square Foot
 data["Price_per_sqft"] = data["Price"] / data["Size"]
 
-st.set_page_config(page_title="Property Recommendation", layout="wide")
-
-# Header
-st.markdown("### Property Recommendation")
-
-# UI Layout - Centered Input Bar
+#  Centered UI Layout for Search
 col1, col2, col3 = st.columns([1, 3, 1])
 with col2:
     city = st.selectbox("City", sorted(data["City_name"].unique()))
     property_type = st.selectbox("Property Type", sorted(data["Property_type"].unique()))
     bhk = st.selectbox("BHK", sorted(data["No_of_BHK"].unique()))
-    size_input = st.text_input("Enter Size (e.g., '2000' or '2000-3000' sqft):")
-    property_name = st.text_input("Search by Property Name", placeholder="Enter property name...")
-    search_btn = st.button("Search")
+    size_input = st.text_input("Enter Size (e.g., '2000' or '2000-3000' sqft):", key="size", help="Specify size range")
+    property_name = st.text_input("Search by Property Name", placeholder="Enter property name...", key="property")
+
+    search_btn = st.button("Search", key="search", help="Click to search properties")
 
 if search_btn:
-    # Determine size range
+    #  Determine size range
     if "-" in size_input:
         try:
             size_min, size_max = map(int, size_input.split("-"))
@@ -66,7 +85,7 @@ if search_btn:
             st.error("Invalid size format. Please enter a valid number.")
             st.stop()
 
-    # Filter properties
+    #  Filter Properties
     filtered_data = data[
         (data["City_name"] == city) &
         (data["Property_type"] == property_type) &
@@ -74,7 +93,7 @@ if search_btn:
         (data["Size"].between(size_min, size_max))
     ]
     
-    # Apply property name search if input is provided
+    #  Apply Property Name Search
     if property_name:
         filtered_data = filtered_data[filtered_data["Property_Name"].str.contains(property_name, case=False, na=False)]
 
@@ -89,15 +108,21 @@ if search_btn:
             
             with cols[index % 2]:
                 st.markdown(
-                    f"""
-                    <div style="background-color: #fff; border: 1px solid #ddd; border-radius: 10px; 
-                    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); padding: 15px; margin-bottom: 15px;">
-                        <h4 style="margin: 0 0 10px; color: #333;">🏠 {row['Property_Name']}</h4>
-                        <p style="margin: 5px 0; color: #555;"><b>📍 City:</b> {row['City_name']} | <b>🏡 Type:</b> {row['Property_type']} | <b>🛏 BHK:</b> {row['No_of_BHK']}</p>
-                        <p style="margin: 5px 0; color: #555"><b>📈 Price per sqft:</b> {price_per_sqft_formatted}</p>
-                        <p style="margin: 5px 0; color: #555"><b>📏 Size:</b> {row['Size']} sqft | <b>💰 Price:</b> {price_formatted}</p>
-                        <p style="margin: 5px 0; color: #555"><b>📌 Locality:</b> {row['Locality_Name']} | <b>📢 Status:</b> {row['Property_status']}</p>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+    f"""
+    <div style="background-color: #fff; border: 1px solid #ddd; border-radius: 10px; 
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); padding: 15px; margin-bottom: 15px;">
+        <h4 style="margin: 0 0 10px; color: #333; font-size: 22px;">🏠 {row['Property_Name']}</h4>
+        <p style="margin: 5px 0; color: #555; font-size: 18px;">
+            <b>📍 City:</b> {row['City_name']} | <b>🏡 Type:</b> {row['Property_type']} | <b>🛏 BHK:</b> {row['No_of_BHK']}
+        </p>
+        <p style="margin: 5px 0; color: #555; font-size: 18px;"><b>📈 Price per sqft:</b> {price_per_sqft_formatted}</p>
+        <p style="margin: 5px 0; color: #555; font-size: 18px;">
+            <b>📏 Size:</b> {row['Size']} sqft | <b>💰 Price:</b> {price_formatted}
+        </p>
+        <p style="margin: 5px 0; color: #555; font-size: 18px;">
+            <b>📌 Locality:</b> {row['Locality_Name']} | <b>📢 Status:</b> {row['Property_status']}
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)``

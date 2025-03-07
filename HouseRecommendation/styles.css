@@ -1,39 +1,53 @@
-@import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
+/* styles.css */
 
-.header {
-    background-color: #1E3A8A;
-    color: white;
-    padding: 15px;
+/* Style for Navigation Bar */
+.navbar {
+    background-color: #0a192f; /* Dark Blue Background */
+    padding: 15px 20px;
+    border-radius: 10px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    border-radius: 10px;
-}
-
-.header img {
-    height: 50px;
-    border-radius: 50%;
-}
-
-.header h1 {
-    font-size: 22px;
-    font-weight: bold;
-    margin-left: 10px;
-}
-
-.profile {
-    display: flex;
     align-items: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
 }
 
-.profile span {
-    margin-left: 10px;
-    font-size: 18px;
+/* Navigation Links */
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: 0.3s;
 }
 
-.property-card {
-    border: 2px solid #4CAF50;
-    padding: 15px;
-    border-radius: 10px;
+.navbar a:hover {
+    background-color: #1f4068;
+}
+
+/* Search Input Field */
+.input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
     margin-bottom: 10px;
+}
+
+/* Buttons */
+.search-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
 }
